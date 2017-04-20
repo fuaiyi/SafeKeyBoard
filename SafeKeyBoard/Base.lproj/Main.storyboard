@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="zKT-al-baj">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--键盘-->
+        <scene sceneID="emt-Q2-Ayi">
+            <objects>
+                <viewController title="键盘" id="zKT-al-baj" customClass="SafeKeyBoardViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="XA9-Qd-cPL"/>
+                        <viewControllerLayoutGuide type="bottom" id="vs4-PJ-jt2"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="JA3-rt-iIO">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入密码" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tiW-CL-Sxh">
+                                <rect key="frame" x="30" y="313.5" width="315" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="Kxz-yf-2dD"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="tiW-CL-Sxh" firstAttribute="centerY" secondItem="JA3-rt-iIO" secondAttribute="centerY" id="8kK-6e-ZWG"/>
+                            <constraint firstItem="tiW-CL-Sxh" firstAttribute="leading" secondItem="JA3-rt-iIO" secondAttribute="leading" constant="30" id="vkj-p2-d5O"/>
+                            <constraint firstItem="tiW-CL-Sxh" firstAttribute="centerX" secondItem="JA3-rt-iIO" secondAttribute="centerX" id="vn0-dO-dBs"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="_safeKeyboard" destination="tiW-CL-Sxh" id="k8Q-1t-kzJ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OtX-B3-zES" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4537" y="6269"/>
+        </scene>
+    </scenes>
+</document>
