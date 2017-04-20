@@ -29,8 +29,10 @@
     // Do any additional setup after loading the view.
     
     
-    [SafeKeyboard keyboardWithTextField:_safeKeyboard];
-    
+    SafeKeyboard*safeKeyboard = [SafeKeyboard keyboardWithTextField:_safeKeyboard];
+    [safeKeyboard safeKeyBoardDidChanged:^(NSString *value) {
+        NSLog(@"输入结果:%@",value);
+    }];
     
 }
 

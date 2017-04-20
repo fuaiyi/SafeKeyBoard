@@ -8,11 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void(^SKSafeKeyboardDidChangedBlock)(NSString*value);
-
 @interface SafeKeyboard : UIView
-
-
 
 //字体颜色
 @property (nonatomic,strong) UIColor *fontColor;
@@ -27,7 +23,7 @@ typedef void(^SKSafeKeyboardDidChangedBlock)(NSString*value);
 /**
  textField内容变化回调
  */
--(void)safeKeyBoardDidChanged:(SKSafeKeyboardDidChangedBlock)safeKeyboardDidChangedBlock;
+-(void)safeKeyBoardDidChanged:(void(^)(NSString*value))safeKeyboardDidChangedBlock;
 
 /**
  初始化类方法

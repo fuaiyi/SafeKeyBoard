@@ -10,8 +10,6 @@
 #import "SafeKeyboard.h"
 #import <Masonry/Masonry.h>
 
-static NSString * const observeValueForKeyPath = @"safeKeyboardText";
-
 const static BOOL randomKeyboard = YES;//是否使用随机键盘
 const static BOOL changeWhenAppear = YES;//每次键盘出现都改变随机(随机键盘才有效)
 
@@ -30,19 +28,19 @@ const static BOOL changeWhenAppear = YES;//每次键盘出现都改变随机(随
 {
     //记录下部的键盘
     UICollectionView *_keyboardView;
+    
     //键盘的数据源
     NSMutableArray *_titleArr;
-    //记录按钮服务的对象
+    
     UITextField *_textField;
     
-    
-    SKSafeKeyboardDidChangedBlock _safeKeyboardDidChangedBlock;
+    void(^_safeKeyboardDidChangedBlock)(NSString*value);
 }
 
 #pragma mark -
 #pragma mark  Public Method
 
--(void)safeKeyBoardDidChanged:(SKSafeKeyboardDidChangedBlock)safeKeyboardDidChangedBlock
+-(void)safeKeyBoardDidChanged:(void(^)(NSString*value))safeKeyboardDidChangedBlock;
 {
     _safeKeyboardDidChangedBlock = safeKeyboardDidChangedBlock;
 }
@@ -99,6 +97,7 @@ const static BOOL changeWhenAppear = YES;//每次键盘出现都改变随机(随
     self = [super initWithFrame:frame];
     if (self)
     {
+        
         [self refresh];
         
         [self setupDefault];
@@ -106,15 +105,6 @@ const static BOOL changeWhenAppear = YES;//每次键盘出现都改变随机(随
         [self setupComponents];
     }
     return self;
-}
-
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
-{
-    if ([keyPath isEqualToString:observeValueForKeyPath])
-    {
-        _safeKeyboardDidChangedBlock ? _safeKeyboardDidChangedBlock(change[NSKeyValueChangeNewKey]) : nil;
-    }
 }
 
 
@@ -128,7 +118,6 @@ const static BOOL changeWhenAppear = YES;//每次键盘出现都改变随机(随
     
     [self setupToolBar];
     [self setupCollectionView];
-    
 }
 
 -(void)setupToolBar
@@ -172,9 +161,6 @@ const static BOOL changeWhenAppear = YES;//每次键盘出现都改变随机(随
     [safeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.mas_equalTo(CGSizeMake(toolBar.center.x+11.0f, toolBar.center.y));
     }];
-    
-    
-    
 }
 
 -(void)setupCollectionView
@@ -187,7 +173,6 @@ const static BOOL changeWhenAppear = YES;//每次键盘出现都改变随机(随
     flowLayout.itemSize = CGSizeMake(kItemWidth, kItemHeight);
     
     _keyboardView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, KToolBarViewHeight, [UIScreen mainScreen].bounds.size.width, self.frame.size.height - KToolBarViewHeight) collectionViewLayout:flowLayout];
-    
     _keyboardView.backgroundColor = [UIColor groupTableViewBackgroundColor];
     _keyboardView.delaysContentTouches = NO;
     _keyboardView.dataSource = self;
@@ -226,13 +211,17 @@ const static BOOL changeWhenAppear = YES;//每次键盘出现都改变随机(随
     //如果用到了IQKeyboardManager
     //    [IQKeyboardManager sharedManager].enableAutoToolbar = NO;
 }
-//
+
 -(void)textFieldEndEditing
 {
     //如果用到了IQKeyboardManager
     //    [IQKeyboardManager sharedManager].enableAutoToolbar = YES;
 }
 
+-(void)textFieldChangedEditing
+{
+    _safeKeyboardDidChangedBlock ? _safeKeyboardDidChangedBlock(_textField.text) : nil;
+}
 
 #pragma mark -
 #pragma mark  Private Methods
@@ -240,12 +229,11 @@ const static BOOL changeWhenAppear = YES;//每次键盘出现都改变随机(随
 //自定义私有的init方法
 - (instancetype)initWithTextField:(UITextField *)textField
 {
-    self = [super init];
-    if (self)
+    if (self = [super init])
     {
         _textField = textField;
         _textField.inputView = self;
-        [_textField addObserver:self forKeyPath:observeValueForKeyPath options:NSKeyValueObservingOptionNew context:nil];
+        [_textField addTarget:self action:@selector(textFieldChangedEditing) forControlEvents:UIControlEventEditingChanged];
         [_textField addTarget:self action:@selector(textFieldBeginEditing) forControlEvents:UIControlEventEditingDidBegin];
         //        [_textField addTarget:self action:@selector(textFieldEndEditing) forControlEvents:UIControlEventEditingDidEnd];
     }
@@ -258,7 +246,8 @@ const static BOOL changeWhenAppear = YES;//每次键盘出现都改变随机(随
     
     if ([@"C" isEqualToString:numStr])
     {
-        _textField.text = nil;
+        _textField.text = @"";
+        _safeKeyboardDidChangedBlock ? _safeKeyboardDidChangedBlock(_textField.text) : nil;
     }
     else if([@"D" isEqualToString:numStr])
     {
@@ -315,17 +304,6 @@ const static BOOL changeWhenAppear = YES;//每次键盘出现都改变随机(随
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
     [cell.contentView setBackgroundColor:[UIColor whiteColor]];
 }
-
-
-#pragma mark -
-#pragma mark  Dealloc
-
-- (void)dealloc
-{
-    //移除观察
-    [_textField removeObserver:self forKeyPath:observeValueForKeyPath];
-}
-
 
 @end
 
